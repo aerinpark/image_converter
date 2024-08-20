@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 
 
-class ImageController:
+class ImageConverter:
 
     def __init__(self, image_name):
         self.name, self.ext = os.path.splitext(image_name)
