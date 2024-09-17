@@ -9,8 +9,6 @@ screen.title("Image Converter")
 screen_width = screen.winfo_screenwidth()
 screen_height = screen.winfo_screenheight()
 screen.geometry("%dx%d" % (screen_width, screen_height))
-print(screen_width)
-print(screen_height)
 
 image_converter = ImageConverter()
 
@@ -20,12 +18,13 @@ left_image.place(relx=0.02, rely=0.1)
 right_image = Label(screen, width=int(screen_width / 2), height=int(screen_height / 2))
 right_image.place(relx=0.5, rely=0.1)
 
+
 def open_file():
 	global left_image, img, image_converter
 	path = filedialog.askopenfilename(
 		title="Select an image file",
 		initialdir="/image_converter/images",
-		filetypes=[('jpeg file', '.jpeg')])
+		filetypes=[('Image Files', ('.jpeg', '.jpg', '.png', '.bmp', '.webp'))])
 	if path:
 		path = path.replace('\\', '/')
 		image_original = Image.open(path)
@@ -79,7 +78,5 @@ def autoscale():
 	
 btn_auto = Button(text="AUTOSCALE", font=FONT, padx=5, pady=5, command=autoscale)
 btn_auto.place(relx=0.73, rely=0.75)
-
-
 
 screen.mainloop()
