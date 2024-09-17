@@ -5,14 +5,18 @@ import numpy as np
 
 class ImageConverter:
 
-    def __init__(self, image_name):
-        self.name, self.ext = os.path.splitext(image_name)
-        self.original = Image.open(image_name)
-        self.gray = self.gray_scale()
-        self.auto = self.auto_level()
-        self.dither = self.dithering()
+    def __init__(self, image_path=None):
+        self.path = image_path
+        if self.path:
+            self.name, self.ext = os.path.splitext(image_path)
+            self.original = Image.open(image_path)
+        
+    def set_path(self, path):
+        self.original = Image.open(path)
 
     def gray_scale(self) -> Image:
+        if self.original is None:
+            return
         # use Y of YCbCr since Y = luminance
         # Y' = 0.2126R + 0.7152G + 0.0722B
         new_image = Image.open(f"{self.name}{self.ext}")
@@ -24,8 +28,6 @@ class ImageConverter:
                 r, g, b = pixels[x, y]
                 gray_y = int(0.2126 * r + 0.7152 * g + 0.0722 * b)
                 new_image.putpixel((x, y), (gray_y, gray_y, gray_y))
-
-        new_image.save(f"{self.name}_gray{self.ext}")
         return new_image
 
     def auto_level(self) -> Image:
@@ -63,7 +65,6 @@ class ImageConverter:
             for y in range(height):
                 r, g, b = pixels[x, y]
                 new_image.putpixel((x, y), (cum_hist_r[r], cum_hist_g[g], cum_hist_b[b]))
-        new_image.save(f"{self.name}_auto{self.ext}")
         return new_image
 
     def dithering(self) -> Image:
@@ -93,5 +94,4 @@ class ImageConverter:
                     new_image.putpixel((x, y), (255, 255, 255))
                 else:
                     new_image.putpixel((x, y), (0, 0, 0))
-        new_image.save(f"{self.name}_dither{self.ext}")
         return new_image
